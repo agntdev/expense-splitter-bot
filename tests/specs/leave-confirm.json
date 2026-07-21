@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Leave trip",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Confirm leaving the trip"
+            }
+          }
+        ],
+        "send": {
+          "callback": "leave:confirm"
+        }
+      }
+    ]
+  }
+]
