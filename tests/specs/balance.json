@@ -1,19 +1,86 @@
 [
   {
-    "name": "/balance",
+    "name": "/balance requires an active trip",
     "steps": [
       {
+        "send": { "text": "/balance" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Show who owes whom, simplified to the fewest payments"
-            }
-          }
-        ],
-        "send": {
-          "text": "/balance"
-        }
+          { "method": "sendMessage", "payload": { "text": "You don't have an active trip yet. Create one first!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "full balance check after logging expense",
+    "steps": [
+      {
+        "send": { "text": "/create" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What's the name of your trip?" } }
+        ]
+      },
+      {
+        "send": { "text": "Balance Test" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got it! What currency for \"Balance Test\"? (default: USD)" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:create:currency:USD" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "✅ Trip \"Balance Test\" created!\nCurrency: USD\nYou're the organizer." } }
+        ]
+      },
+      {
+        "send": { "text": "/add" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Send me the user ID or username of the person to add:" } }
+        ]
+      },
+      {
+        "send": { "text": "55555" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "✅ Added to the trip!" } }
+        ]
+      },
+      {
+        "send": { "text": "/log" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "How much did you spend?" } }
+        ]
+      },
+      {
+        "send": { "text": "100" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What was it for?" } }
+        ]
+      },
+      {
+        "send": { "text": "Hotel" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Who paid?" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:log:payer:1" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "Who should split this? (comma-separated IDs, or \"all\" for everyone)\nMembers: You, User 55555" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:log:bene:all" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "✅ Logged: Hotel — USD 100.00\nSplit among 2 people (USD 50.00 each)" } }
+        ]
+      },
+      {
+        "send": { "text": "/balance" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "📊 Who owes whom:\n\n• User 55555 owes You USD 50.00" } }
+        ]
       }
     ]
   }

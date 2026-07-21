@@ -1,19 +1,12 @@
 [
   {
-    "name": "Leave trip",
+    "name": "Leave trip requires an active trip",
     "steps": [
       {
+        "send": { "callback": "leave:confirm" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Confirm leaving the trip"
-            }
-          }
-        ],
-        "send": {
-          "callback": "leave:confirm"
-        }
+          { "method": "sendMessage", "payload": { "text": "You don't have an active trip. Create one first!" } }
+        ]
       }
     ]
   }

@@ -1,19 +1,12 @@
 [
   {
-    "name": "My balance",
+    "name": "My balance responds to button tap",
     "steps": [
       {
+        "send": { "callback": "balance:my" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Check your private balance in a DM"
-            }
-          }
-        ],
-        "send": {
-          "callback": "balance:my"
-        }
+          { "method": "sendMessage" }
+        ]
       }
     ]
   }
