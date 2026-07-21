@@ -1,19 +1,66 @@
 [
   {
-    "name": "/create",
+    "name": "/create a trip with default currency",
     "steps": [
       {
+        "send": { "text": "/create" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Create a new trip with a name and optional currency"
-            }
-          }
-        ],
-        "send": {
-          "text": "/create"
-        }
+          { "method": "sendMessage", "payload": { "text": "What's the name of your trip?" } }
+        ]
+      },
+      {
+        "send": { "text": "Weekend in Barcelona" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got it! What currency for \"Weekend in Barcelona\"? (default: USD)" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:create:currency:USD" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "✅ Trip \"Weekend in Barcelona\" created!\nCurrency: USD\nYou're the organizer." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/create a trip with custom currency",
+    "steps": [
+      {
+        "send": { "text": "/create" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What's the name of your trip?" } }
+        ]
+      },
+      {
+        "send": { "text": "Tokyo Business Trip" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got it! What currency for \"Tokyo Business Trip\"? (default: USD)" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:create:currency:EUR" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "✅ Trip \"Tokyo Business Trip\" created!\nCurrency: EUR\nYou're the organizer." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/create rejects empty trip name",
+    "steps": [
+      {
+        "send": { "text": "/create" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What's the name of your trip?" } }
+        ]
+      },
+      {
+        "send": { "text": "   " },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Trip name can't be empty — try again." } }
+        ]
       }
     ]
   }

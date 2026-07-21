@@ -1,19 +1,42 @@
 [
   {
-    "name": "/leave",
+    "name": "/leave requires an active trip",
     "steps": [
       {
+        "send": { "text": "/leave" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Remove oneself from the trip"
-            }
-          }
-        ],
-        "send": {
-          "text": "/leave"
-        }
+          { "method": "sendMessage", "payload": { "text": "You don't have an active trip yet." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "organizer cannot leave own trip",
+    "steps": [
+      {
+        "send": { "text": "/create" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What's the name of your trip?" } }
+        ]
+      },
+      {
+        "send": { "text": "Leave Test" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got it! What currency for \"Leave Test\"? (default: USD)" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:create:currency:USD" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "✅ Trip \"Leave Test\" created!\nCurrency: USD\nYou're the organizer." } }
+        ]
+      },
+      {
+        "send": { "text": "/leave" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "The organizer can't leave their own trip. Transfer ownership or delete it instead." } }
+        ]
       }
     ]
   }

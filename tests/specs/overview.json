@@ -1,19 +1,74 @@
 [
   {
-    "name": "/overview",
+    "name": "/overview requires an active trip",
     "steps": [
       {
+        "send": { "text": "/overview" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Organizer-only: full trip summary with all expenses"
-            }
-          }
-        ],
-        "send": {
-          "text": "/overview"
-        }
+          { "method": "sendMessage", "payload": { "text": "You don't have an active trip yet. Create one first!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "full overview after creating trip and logging expense",
+    "steps": [
+      {
+        "send": { "text": "/create" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What's the name of your trip?" } }
+        ]
+      },
+      {
+        "send": { "text": "Overview Test" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got it! What currency for \"Overview Test\"? (default: USD)" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:create:currency:EUR" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "✅ Trip \"Overview Test\" created!\nCurrency: EUR\nYou're the organizer." } }
+        ]
+      },
+      {
+        "send": { "text": "/log" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "How much did you spend?" } }
+        ]
+      },
+      {
+        "send": { "text": "25.50" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What was it for?" } }
+        ]
+      },
+      {
+        "send": { "text": "Coffee" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Who paid?" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:log:payer:1" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "Who should split this? (comma-separated IDs, or \"all\" for everyone)\nMembers: You" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:log:bene:all" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "✅ Logged: Coffee — EUR 25.50\nSplit among 1 people (EUR 25.50 each)" } }
+        ]
+      },
+      {
+        "send": { "text": "/overview" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "📁 Overview Test (EUR)\nOrganizer: User 1\nMembers: 1\nTotal spent: EUR 25.50\n\nExpenses:\n• Coffee: EUR 25.50 (paid by You)" } }
+        ]
       }
     ]
   }

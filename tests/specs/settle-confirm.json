@@ -1,19 +1,12 @@
 [
   {
-    "name": "Settle debt",
+    "name": "Settle debt requires an active trip",
     "steps": [
       {
+        "send": { "callback": "settle:confirm" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Confirm settling a debt after IRL payment"
-            }
-          }
-        ],
-        "send": {
-          "callback": "settle:confirm"
-        }
+          { "method": "sendMessage", "payload": { "text": "You don't have an active trip yet. Create one first!" } }
+        ]
       }
     ]
   }

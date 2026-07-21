@@ -1,19 +1,42 @@
 [
   {
-    "name": "/settle",
+    "name": "/settle requires an active trip",
     "steps": [
       {
+        "send": { "text": "/settle" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Mark a debt as paid after settling it IRL"
-            }
-          }
-        ],
-        "send": {
-          "text": "/settle"
-        }
+          { "method": "sendMessage", "payload": { "text": "You don't have an active trip yet. Create one first!" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/settle shows no debts when all settled",
+    "steps": [
+      {
+        "send": { "text": "/create" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What's the name of your trip?" } }
+        ]
+      },
+      {
+        "send": { "text": "Settle Test" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got it! What currency for \"Settle Test\"? (default: USD)" } }
+        ]
+      },
+      {
+        "send": { "callback": "trip:create:currency:USD" },
+        "expect": [
+          { "method": "answerCallbackQuery" },
+          { "method": "sendMessage", "payload": { "text": "✅ Trip \"Settle Test\" created!\nCurrency: USD\nYou're the organizer." } }
+        ]
+      },
+      {
+        "send": { "text": "/settle" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "All settled! No debts to pay." } }
+        ]
       }
     ]
   }
