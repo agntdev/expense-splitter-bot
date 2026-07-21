@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/settle",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Mark a debt as paid after settling it IRL"
+            }
+          }
+        ],
+        "send": {
+          "text": "/settle"
+        }
+      }
+    ]
+  }
+]
